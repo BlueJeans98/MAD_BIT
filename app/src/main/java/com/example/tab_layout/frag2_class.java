@@ -2,6 +2,7 @@ package com.example.tab_layout;
 
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -9,11 +10,13 @@ import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,6 +31,7 @@ public class frag2_class extends Fragment {
     private ArrayList<String> imagePaths;
     private RecyclerView imagesRV;
     private RecyclerViewAdapter imageRVAdapter;
+    Context context;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -38,13 +42,48 @@ public class frag2_class extends Fragment {
         @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment2, null);
+        context = getContext();
         imagePaths = new ArrayList<>();
         imagesRV = root.findViewById(R.id.idRVImages);
 
         requestPermissions();
+
+        imageRVAdapter.setOnItemLongClickListener(new RecyclerViewAdapter.OnItemLongClickListener(){
+
+            //아이템 클릭
+        @Override
+        public void onItemLongClick(View v, int position) {
+            String path = imagePaths.get(position);
+            itemLongClick(path, position);
+        }
+
+    });
+
+
         return root;
     }
 
+    private void itemLongClick(String path, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.image_delete, null, false);
+        builder.setView(view);
+
+        final AlertDialog dialog = builder.create();
+
+        final Button image_delete = view.findViewById(R.id.image_delete);
+
+        image_delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                imagePaths.remove(position);
+                imageRVAdapter.notifyItemRemoved(position);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
 
     private boolean checkPermission() {
         // in this method we are checking if the permissions are granted or not and returning the result.
