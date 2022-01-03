@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ImageDetailActivity">
+    tools:context=".ImageFinalActivity">
 
     <!--image view to display our image-->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/viewPagerImageSlider"
+    <ImageView
+        android:id="@+id/idFImage"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingStart="80dp"
-        android:paddingEnd="80dp" />
+        android:layout_centerInParent="true" />
+
 </RelativeLayout>

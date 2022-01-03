@@ -22,12 +22,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     private final Context context;
     private final ArrayList<String> imagePathArrayList;
 
+
     // on below line we have created a constructor.
     public RecyclerViewAdapter(Context context, ArrayList<String> imagePathArrayList) {
         this.context = context;
         this.imagePathArrayList = imagePathArrayList;
     }
 
+    interface OnItemLongClickListener {
+        void onItemLongClick(View v, int position);
+    }
+
+    private OnItemLongClickListener mListenerL = null;
+
+    public void setOnItemLongClickListener(OnItemLongClickListener listener) {
+        this.mListenerL = listener;
+    }
 
     @NonNull
     @Override
@@ -59,12 +69,26 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                     Intent i = new Intent(context, ImageDetailActivity.class);
 
                     // on below line we are passing the image path to our new activity.
-                    i.putExtra("imgPath", imagePathArrayList.get(position));
+                    i.putExtra("position", position);
+                    i.putExtra("PathArrayList",imagePathArrayList);
 
                     // at last we are starting our activity.
                     context.startActivity(i);
                 }
             });
+
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    if(position!=RecyclerView.NO_POSITION){
+                        if (mListenerL!=null){
+                            mListenerL.onItemLongClick(view,position);
+                        }
+                    }
+                    return true;
+                }
+            });
+
         }
     }
 
