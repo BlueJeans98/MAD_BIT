@@ -14,16 +14,17 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:gravity="left"
-            android:text="잔고: "
+            android:text="$ 잔고: "
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/balance"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="0 KRW"
+            android:text="0 $"
             android:textSize="30sp" />
     </LinearLayout>
 
@@ -36,10 +37,11 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:gravity="left"
-            android:text="가상화폐 잔고: "
+            android:text="BTC 잔고: "
             android:textSize="30sp" />
 
         <TextView
+            android:id="@+id/num_BTC"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
@@ -47,6 +49,7 @@
             android:gravity="right"
             android:text="0 BTC"
             android:textSize="30sp" />
+
     </LinearLayout>
 
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -72,7 +75,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:gravity="left"
-            android:text="가상화폐 시세:"
+            android:text="BTC 시세: "
             android:textSize="30sp" />
 
         <TextView
@@ -82,7 +85,7 @@
             android:layout_marginRight="10dp"
             android:layout_weight="1"
             android:gravity="right"
-            android:text="0 KRW/BTC"
+            android:text="0 $"
             android:textSize="30sp" />
     </LinearLayout>
 
@@ -113,4 +116,5 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.appcompat.widget.LinearLayoutCompat>

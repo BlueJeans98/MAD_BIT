@@ -6,30 +6,29 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.tab_layout.ContactModel;
-
 import java.util.ArrayList;
 
-public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
+public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder> implements Filterable {
     //Initialize variable
 
     Activity activity;
     ArrayList<ContactModel> arrayList;
 
-    private String TAG = "Adapter";
-    private Context context2;
+    private final Context context2;
+    private final ArrayList<ContactModel> unfilteredList;
 
     public MainAdapter(Activity activity, ArrayList<ContactModel> arrayList, Context context){
         this.activity = activity;
         this.arrayList = arrayList;
         this.context2 = context;
+        this.unfilteredList = arrayList;
         notifyDataSetChanged();
     }
 
@@ -57,9 +56,9 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
         for(int i = 0; i < temp.length(); ++i) {
             char buf = temp.charAt(i);
             if(!Character.isDigit(buf)) continue;
+            if(j == 3 || j == 7) num = num.concat(Character.toString('-'));
             num = num.concat(Character.toString(buf));
             j++;
-            if(j == 3 || j == 7) num = num.concat(Character.toString('-'));
         }
         holder.tvNumber.setText(num);
     }
@@ -68,6 +67,39 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
     public int getItemCount() {
         //Return array list size
         return arrayList.size();
+    }
+
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                String str = constraint.toString();
+                if(str.isEmpty()) {
+                    arrayList = unfilteredList;
+                } else {
+                    ArrayList<ContactModel> filteringList = new ArrayList<>();
+
+                    for(ContactModel item: unfilteredList) {
+                        if(item.getName().contains(str))
+                            filteringList.add(item);
+                    }
+
+                    arrayList = filteringList;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = arrayList;
+
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                arrayList = (ArrayList<ContactModel>) results.values;
+                notifyDataSetChanged();
+            }
+        };
     }
 
     interface OnItemClickListener {
@@ -98,8 +130,6 @@ public class MainAdapter extends RecyclerView.Adapter<MainAdapter.ViewHolder>{
             //Assign variable
             tvName = itemView.findViewById(R.id.tv_name);
             tvNumber = itemView.findViewById(R.id.tv_number);
-            final Button btn_edit = itemView.findViewById(R.id.btn_edit_init);
-            final Button btn_delete = itemView.findViewById(R.id.btn_delete);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
