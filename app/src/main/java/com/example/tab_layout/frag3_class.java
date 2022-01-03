@@ -203,20 +203,21 @@ public double strTolf(String str) {
 
     public String numToString(int num) {
 
-        if(num == 0) return "0";
+        if (num == 0) return "0";
 
         int i = 0;
         String ret = "";
 
-        while(num != 0) {
-            if(i != 0 && i%3 == 0) ret = (",").concat(ret);
-            int temp = num%10;
+        while (num != 0) {
+            if (i != 0 && i % 3 == 0) ret = (",").concat(ret);
+            int temp = num % 10;
             num /= 10;
             ret = Integer.toString(temp).concat(ret);
             i++;
         }
 
         return ret;
+    }
 
     private void load() {
         Request request = new Request.Builder()
@@ -263,7 +264,6 @@ public double strTolf(String str) {
         }
     }
 
-}
 
     public static Handler mHandler;
 
