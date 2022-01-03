@@ -26,12 +26,34 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
+import androidx.fragment.app.Fragment;
+import org.json.JSONObject;
+import java.io.IOException;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
+
+
 public class frag3_class extends Fragment {
 
     private static final String TAG = "frag3_class";
 
     private LineChart chart;
     private Thread thread;
+
+    private TextView cur_price;
+    public static final String BPI_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
+    private OkHttpClient okHttpClient = new OkHttpClient();
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +63,17 @@ public class frag3_class extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment3, null);
+
+        cur_price = root.findViewById(R.id.cur_price);
+
+        Handler handler =new Handler();
+        final Runnable r = new Runnable() {
+            public void run() {
+                handler.postDelayed(this, 100);
+                load();
+            }
+        };
+        handler.postDelayed(r, 0000);
 
         chart = (LineChart) root.findViewById(R.id.LineChart);
 
@@ -55,6 +88,7 @@ public class frag3_class extends Fragment {
         des.setText("Real-Time DATA");
         des.setTextSize(15f);
         des.setTextColor(Color.WHITE);
+
 
 // touch gestures (false-비활성화)
         chart.setTouchEnabled(false);
@@ -89,6 +123,8 @@ public class frag3_class extends Fragment {
         leftAxis.setTextColor(getResources().getColor(R.color.colorgrid));
         leftAxis.setDrawGridLines(true);
         leftAxis.setGridColor(getResources().getColor(R.color.colorgrid));
+        leftAxis.setAxisMinimum(46500);
+        leftAxis.setAxisMaximum(47500);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -99,9 +135,51 @@ public class frag3_class extends Fragment {
         chart.invalidate();
 
         return root;
+
     }
 
-    private void feedMultiple() {
+    private void load() {
+        Request request = new Request.Builder()
+                .url(BPI_ENDPOINT)
+                .build();
+        okHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                /*Toast.makeText(MainActivity.this, "Error during BPI loading : "
+                        + e.getMessage(), Toast.LENGTH_SHORT).show();*/
+            }
+            @Override
+            public void onResponse(Call call, Response response)
+                    throws IOException {
+                final String body = response.body().string();
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        parseBpiResponse(body);
+                    }
+                });
+            }
+        });
+    }
+
+    private double cost;
+
+    private void parseBpiResponse(String body) {
+        try {
+            StringBuilder builder = new StringBuilder();
+            JSONObject jsonObject = new JSONObject(body);
+            JSONObject bpiObject = jsonObject.getJSONObject("bpi");
+            JSONObject usdObject = bpiObject.getJSONObject("USD");
+            builder.append(usdObject.getString("rate"));
+            cur_price.setText(builder.deleteCharAt(2).toString());
+            cost = Double.parseDouble(builder.toString());
+        } catch (Exception e) {
+        }
+    }
+
+    public static Handler mHandler;
+
+   private void feedMultiple() {
 
         if (thread != null){
             thread.interrupt();
@@ -113,17 +191,10 @@ public class frag3_class extends Fragment {
             public void run() {
                 boolean a = true;
                 while (true){
+
                     try {
-                        Thread.sleep(10);
-                        double d;
-                        if(a){
-                            d=1;
-                        }
-                        else{
-                            d=2;
-                        }
-                        addEntry(d);
-                        a = !a;
+                        Thread.sleep(1000);
+                        addEntry(cost);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
