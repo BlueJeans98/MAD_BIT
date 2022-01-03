@@ -2,6 +2,8 @@ package com.example.tab_layout;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,6 +11,9 @@ import android.view.ViewGroup;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
@@ -16,13 +21,17 @@ import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 
 public class frag3_class extends Fragment {
 
     private static final String TAG = "frag3_class";
 
-    private LineChart mChart;
+    private LineChart chart;
+    private Thread thread;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -33,44 +42,143 @@ public class frag3_class extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment3, null);
 
-        mChart = (LineChart) root.findViewById(R.id.LineChart);
+        chart = (LineChart) root.findViewById(R.id.LineChart);
 
-        //mChart.setOnChartGestureListener(frag3_class.this);
-        //mChart.setOnChartValueSelectedListener(frag3_class.this);
+        chart.setDrawGridBackground(true);
+        chart.setBackgroundColor(Color.BLACK);
+        chart.setGridBackgroundColor(Color.BLACK);
 
-        mChart.setDragEnabled(true);
-        mChart.setScaleEnabled(false);
+// description text
+        chart.getDescription().setEnabled(true);
+        Description des = chart.getDescription();
+        des.setEnabled(true);
+        des.setText("Real-Time DATA");
+        des.setTextSize(15f);
+        des.setTextColor(Color.WHITE);
 
-        ArrayList<Entry> yValues = new ArrayList<>();
+// touch gestures (false-비활성화)
+        chart.setTouchEnabled(false);
 
-        yValues.add(new Entry(0,60f));
-        yValues.add(new Entry(1,50f));
-        yValues.add(new Entry(2,70f));
-        yValues.add(new Entry(3,30f));
-        yValues.add(new Entry(4,50f));
-        yValues.add(new Entry(5,60f));
-        yValues.add(new Entry(6,65f));
+// scaling and dragging (false-비활성화)
+        chart.setDragEnabled(false);
+        chart.setScaleEnabled(false);
+
+//auto scale
+        chart.setAutoScaleMinMaxEnabled(true);
+
+// if disabled, scaling can be done on x- and y-axis separately
+        chart.setPinchZoom(false);
+
+//X축
+        chart.getXAxis().setDrawGridLines(true);
+        chart.getXAxis().setDrawAxisLine(false);
+
+        chart.getXAxis().setEnabled(true);
+        chart.getXAxis().setDrawGridLines(false);
+
+//Legend
+        Legend l = chart.getLegend();
+        l.setEnabled(true);
+        l.setFormSize(10f); // set the size of the legend forms/shapes
+        l.setTextSize(12f);
+        l.setTextColor(Color.WHITE);
+
+//Y축
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setEnabled(true);
+        leftAxis.setTextColor(getResources().getColor(R.color.colorgrid));
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(getResources().getColor(R.color.colorgrid));
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
 
 
-        LineDataSet set1 = new LineDataSet(yValues, "Data Set 1");
-
-        set1.setFillAlpha(110);
-
-        set1.setColor(Color.RED);
-        set1.setLineWidth(3f);
-        set1.setValueTextSize(10f);
-        set1.setValueTextColor(Color.GREEN);
-
-        ArrayList<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(set1);
-
-        LineData data = new LineData(dataSets);
-
-        mChart.setData(data);
+        feedMultiple();
+// don't forget to refresh the drawing
+        chart.invalidate();
 
         return root;
     }
 
+    private void feedMultiple() {
+
+        if (thread != null){
+            thread.interrupt();
+        }
+
+        thread = new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                boolean a = true;
+                while (true){
+                    try {
+                        Thread.sleep(10);
+                        double d;
+                        if(a){
+                            d=1;
+                        }
+                        else{
+                            d=2;
+                        }
+                        addEntry(d);
+                        a = !a;
+                    } catch (InterruptedException e) {
+                        // TODO Auto-generated catch block
+                        e.printStackTrace();
+                    }
+                }
+            }
+        });
+
+        thread.start();
+    }
+
+    private void addEntry(double num) {
+
+        LineData data = chart.getData();
+
+        if (data == null) {
+            data = new LineData();
+            chart.setData(data);
+        }
+
+        ILineDataSet set = data.getDataSetByIndex(0);
+        // set.addEntry(...); // can be called as well
+
+        if (set == null) {
+            set = createSet();
+            data.addDataSet(set);
+        }
+
+
+
+        data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
+        data.notifyDataChanged();
+
+        // let the chart know it's data has changed
+        chart.notifyDataSetChanged();
+
+        chart.setVisibleXRangeMaximum(150);
+        // this automatically refreshes the chart (calls invalidate())
+        chart.moveViewTo(data.getEntryCount(), 50f, YAxis.AxisDependency.LEFT);
+
+    }
+
+    private LineDataSet createSet() {
+
+        LineDataSet set = new LineDataSet(null, "Real-time Line Data");
+        set.setLineWidth(1f);
+        set.setDrawValues(false);
+        set.setValueTextColor(getResources().getColor(R.color.white));
+        set.setColor(getResources().getColor(R.color.white));
+        set.setMode(LineDataSet.Mode.LINEAR);
+        set.setDrawCircles(false);
+        set.setHighLightColor(Color.rgb(190, 190, 190));
+
+        return set;
+    }
 
 
 }
