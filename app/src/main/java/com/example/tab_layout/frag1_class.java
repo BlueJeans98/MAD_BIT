@@ -7,12 +7,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -27,14 +30,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import java.util.ArrayList;
 
-public class frag1_class extends Fragment {
+public class frag1_class extends Fragment implements TextWatcher {
     //Initialize variable
     RecyclerView recyclerView;
     ArrayList<ContactModel> arrayList;
     MainAdapter adapter;
     Context context;
-    private EditText edit_name, edit_number;
-    private Button btn_save;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -45,9 +46,6 @@ public class frag1_class extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View root = inflater.inflate(R.layout.fragment1, null);
         context = getContext();
-        edit_name = root.findViewById(R.id.edit_name);
-        edit_number = root.findViewById(R.id.edit_number);
-        btn_save = root.findViewById(R.id.btn_save);
         recyclerView = root.findViewById(R.id.recycler_view);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(context, LinearLayoutManager.VERTICAL, false);
@@ -61,37 +59,24 @@ public class frag1_class extends Fragment {
         final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(context);
         bottomSheetDialog.setContentView(view);
 
-        final Button btn_call = view.findViewById(R.id.btn_call);
-        final Button btn_message = view.findViewById(R.id.btn_message);
-        final Button btn_video_call = view.findViewById(R.id.btn_video_call);
+        final ImageButton btn_call = view.findViewById(R.id.btn_call);
+        final ImageButton btn_message = view.findViewById(R.id.btn_message);
+        final ImageButton btn_video_call = view.findViewById(R.id.btn_video_call);
+        final ImageButton btn_save_init = root.findViewById(R.id.btn_save_init);
+
+        EditText editText = root.findViewById(R.id.search_bar);
+        editText.addTextChangedListener(this);
 
         //Check permission
         checkPermission();
 
-        //버튼 클릭이벤트
-        //이름과 전화번호를 입력한 후 버튼을 클릭하면 어레이리스트에 데이터를 담고 리사이클러뷰에 띄운다.
-        btn_save.setOnClickListener (new View.OnClickListener () {
+        btn_save_init.setOnClickListener (new View.OnClickListener () {
+
             @Override
             public void onClick(View view) {
-                if(edit_name.getText().length()==0&&edit_number.getText().length()==0){
-                    Toast.makeText (context,"이름과 전화번호를 입력해주세요", Toast.LENGTH_SHORT).show();
-                }else{
-                    String name = edit_name.getText().toString();
-                    String number = edit_number.getText().toString();
-                    edit_name.setText("");
-                    edit_number.setText("");
-                    ContactModel data = new ContactModel(name, number);
-
-                    int lower_bound = arrayList.size();
-                    for(int i = 0; i < arrayList.size(); ++i)
-                        if(arrayList.get(i).getName().compareTo(name) >= 0) {
-                            lower_bound = i;
-                            break;
-                        }
-                    arrayList.add(lower_bound, data);
-                    adapter.notifyItemInserted(arrayList.size ()-1);
-                }
+                saveInit();
             }
+
         });
 
         //리사이클러뷰 클릭 이벤트
@@ -148,7 +133,7 @@ public class frag1_class extends Fragment {
         final AlertDialog dialog = builder.create();
 
         final Button btn_edit = view.findViewById(R.id.btn_edit);
-        final Button btn_cancel = view.findViewById(R.id.btn_cancel);
+        final Button btn_cancel_edit = view.findViewById(R.id.btn_cancel_edit);
         final EditText edit_name = view.findViewById(R.id.edit_editName);
         final EditText edit_number = view.findViewById(R.id.edit_editNumber);
 
@@ -174,7 +159,7 @@ public class frag1_class extends Fragment {
         });
 
         // 취소 버튼 클릭
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
+        btn_cancel_edit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view)
             {
@@ -192,8 +177,8 @@ public class frag1_class extends Fragment {
 
         final AlertDialog dialog = builder.create();
 
-        final Button btn_edit_init = view.findViewById(R.id.btn_edit_init);
-        final Button btn_delete = view.findViewById(R.id.btn_delete);
+        final ImageButton btn_edit_init = view.findViewById(R.id.btn_edit_init);
+        final ImageButton btn_delete = view.findViewById(R.id.btn_delete);
 
         btn_edit_init.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -210,6 +195,56 @@ public class frag1_class extends Fragment {
             {
                 arrayList.remove(position);
                 adapter.notifyItemRemoved(position);
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void saveInit() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        View view = LayoutInflater.from(context).inflate(R.layout.save_click, null, false);
+        builder.setView(view);
+
+        final AlertDialog dialog = builder.create();
+
+        final Button btn_save = view.findViewById(R.id.btn_save);
+        final Button btn_cancel_save = view.findViewById(R.id.btn_cancel_save);
+
+        final EditText edit_name = view.findViewById(R.id.edit_name);
+        final EditText edit_number = view.findViewById(R.id.edit_number);
+
+        btn_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                if(edit_name.getText().length()==0&&edit_number.getText().length()==0){
+                    Toast.makeText (context,"이름과 전화번호를 입력해주세요", Toast.LENGTH_SHORT).show();
+                }else{
+                    String name = edit_name.getText().toString();
+                    String number = edit_number.getText().toString();
+                    edit_name.setText("");
+                    edit_number.setText("");
+                    ContactModel data = new ContactModel(name, number);
+
+                    int lower_bound = arrayList.size();
+                    for(int i = 0; i < arrayList.size(); ++i)
+                        if(arrayList.get(i).getName().compareTo(name) >= 0) {
+                            lower_bound = i;
+                            break;
+                        }
+                    arrayList.add(lower_bound, data);
+                    adapter.notifyItemInserted(lower_bound);
+                }
+                dialog.dismiss();
+            }
+        });
+
+        btn_cancel_save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
                 dialog.dismiss();
             }
         });
@@ -305,6 +340,21 @@ public class frag1_class extends Fragment {
             //Call check permission method
             checkPermission();
         }
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+    }
+
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        adapter.getFilter().filter(charSequence.toString());
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+
     }
 }
 
