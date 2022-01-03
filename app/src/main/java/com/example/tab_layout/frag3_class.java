@@ -73,7 +73,7 @@ public class frag3_class extends Fragment {
     private final int num_BTC = 0;
     private String cost_str = "";
     private String prev_cost_str = "";
-    private double cost_lf = 0;
+    private double cost_lf = 46500;
 
     long seed = System.currentTimeMillis();
     Random rand = new Random(seed);
@@ -106,7 +106,7 @@ public class frag3_class extends Fragment {
         final Runnable r = new Runnable() {
             public void run() {
 
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 100);
                 load();
 
                 if(!cost_str.equals(prev_cost_str)) {
@@ -168,8 +168,8 @@ public class frag3_class extends Fragment {
         leftAxis.setTextColor(getResources().getColor(R.color.colorgrid));
         leftAxis.setDrawGridLines(true);
         leftAxis.setGridColor(getResources().getColor(R.color.colorgrid));
-        leftAxis.setAxisMinimum(46500);
-        leftAxis.setAxisMaximum(47500);
+        leftAxis.setAxisMinimum(46000);
+        leftAxis.setAxisMaximum(47000);
 
         YAxis rightAxis = chart.getAxisRight();
         rightAxis.setEnabled(false);
@@ -247,6 +247,7 @@ public double strTolf(String str) {
 
     }
 
+
     private void parseBpiResponse(String body) {
         try {
             StringBuilder builder = new StringBuilder();
@@ -258,14 +259,10 @@ public double strTolf(String str) {
             builder.append(usdObject.getString("rate")).append("$");
 
             cost_str = builder.toString();
-
         } catch (Exception e) {
 
         }
     }
-
-
-    public static Handler mHandler;
 
    private void feedMultiple() {
 
@@ -277,11 +274,10 @@ public double strTolf(String str) {
 
             @Override
             public void run() {
-                boolean a = true;
                 while (true){
 
                     try {
-                        Thread.sleep(1000);
+                        Thread.sleep(100);
                         addEntry(cost_lf);
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
