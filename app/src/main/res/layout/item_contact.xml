@@ -28,6 +28,7 @@
             android:id="@+id/tv_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumbarungothic"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
             android:textColor="@color/purple_700"
@@ -38,6 +39,7 @@
             android:id="@+id/tv_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:fontFamily="@font/nanumbarungothiclight"
             android:textSize="14sp" />
     </LinearLayout>
 

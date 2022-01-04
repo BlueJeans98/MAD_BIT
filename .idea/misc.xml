@@ -3,44 +3,37 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/User/AndroidStudioProjects//MadCamp_Week_1/app/src/main/res/drawable/button_color_drawable.xml" value="0.22083333333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects//MadCamp_Week_1/app/src/main/res/drawable/button_design.xml" value="0.22083333333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects//MadCamp_Week_1/app/src/main/res/drawable/buttonshape.xml" value="0.22083333333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects//MadCamp_Week_1/app/src/main/res/drawable/buttonshape2.xml" value="0.22083333333333333" />
-        <entry key="..\:/Users/User/AndroidStudioProjects//MadCamp_Week_1/app/src/main/res/layout/save_click.xml" value="0.2957427536231884" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/activity_image_detail.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/activity_image_final.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/activity_main.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/card_layout.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/dialog.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/fragment1.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/fragment2.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/fragment3.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/image_delete.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/item_contact.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/long_click.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/save_click.xml" value="0.36614583333333334" />
-        <entry key="..\:/Users/User/AndroidStudioProjects/MadCamp_Week_1/app/src/main/res/layout/slider_item_container.xml" value="0.36614583333333334" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/drawable/button_color_drawable.xml" value="0.22083333333333333" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/drawable/button_design.xml" value="0.22083333333333333" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/drawable/buttonshape.xml" value="0.22083333333333333" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/drawable/buttonshape2.xml" value="0.22083333333333333" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/font/font.xml" value="0.3902564102564103" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/activity_image_detail.xml" value="0.20208333333333334" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/activity_main.xml" value="0.2957427536231884" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/buy.xml" value="0.20520833333333333" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/card_layout.xml" value="0.20208333333333334" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/dialog.xml" value="0.33" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/fragment1.xml" value="0.2957427536231884" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/fragment2.xml" value="0.20208333333333334" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/fragment3.xml" value="0.26268115942028986" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/item_contact.xml" value="0.2957427536231884" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/long_click.xml" value="0.33" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/save_click.xml" value="0.2957427536231884" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/sell.xml" value="0.5" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/short_click.xml" value="0.33" />
+        <entry key="..\:/MadCamp_Week_1/app/src/main/res/layout/tab3.xml" value="0.20520833333333333" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/drawable/button_design.xml" value="0.1953125" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/drawable/edge.xml" value="0.1953125" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/drawable/ic_baseline_person_24.xml" value="0.1953125" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/activity_image_detail.xml" value="0.17980072463768115" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/activity_image_final.xml" value="0.17844202898550723" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/activity_main.xml" value="0.1" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/card_layout.xml" value="0.17980072463768115" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/dialog.xml" value="0.19270833333333334" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/example_single_chart_fragment.xml" value="0.1" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/fragment1.xml" value="0.17831813576494426" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/fragment2.xml" value="0.17831813576494426" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/fragment3.xml" value="0.1796875" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/horizontalscrollview.xml" value="0.1796875" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/image_delete.xml" value="0.22" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/imageitem.xml" value="0.1" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/item_contact.xml" value="0.19270833333333334" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/long_click.xml" value="0.19270833333333334" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/reealtimegraph.xml" value="0.14479166666666668" />
         <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/short_click.xml" value="0.19270833333333334" />
-        <entry key="..\:/Users/jjssk/AndroidStudioProjects/tab_layout/app/src/main/res/layout/slider_item.xml" value="0.17844202898550723" />
       </map>
     </option>
   </component>

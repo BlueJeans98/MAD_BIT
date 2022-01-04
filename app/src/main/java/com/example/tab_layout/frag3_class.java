@@ -7,10 +7,12 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import com.github.mikephil.charting.charts.LineChart;
@@ -35,14 +37,20 @@ import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 
-
 import android.widget.Toast;
+
 import androidx.fragment.app.Fragment;
+
 import org.json.JSONObject;
+
 import java.io.IOException;
+
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -50,8 +58,8 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 
-
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.Random;
@@ -69,11 +77,12 @@ public class frag3_class extends Fragment {
     private TextView txt_num_BTC;
     public static final String BPI_ENDPOINT = "https://api.coindesk.com/v1/bpi/currentprice.json";
     private final OkHttpClient okHttpClient = new OkHttpClient();
-    private final int balance = 1000000;
-    private final int num_BTC = 0;
+    private double balance = 1000000.0;
+    private int num_BTC = 0;
     private String cost_str = "";
     private String prev_cost_str = "";
-    private double cost_lf = 46500;
+    private double cost_lf = 46500.0;
+    private double fees = 0.0005;
 
     long seed = System.currentTimeMillis();
     Random rand = new Random(seed);
@@ -82,7 +91,6 @@ public class frag3_class extends Fragment {
 
     private LineChart chart;
     private Thread thread;
-
 
 
     @Override
@@ -98,27 +106,43 @@ public class frag3_class extends Fragment {
         txt_balance = root.findViewById(R.id.balance);
         txt_num_BTC = root.findViewById(R.id.num_BTC);
 
-        txt_balance.setText(numToString(balance).concat(" $"));
+        txt_balance.setText(lfTostr(balance));
         txt_num_BTC.setText(numToString(num_BTC).concat(" BTC"));
 
+        final Button btn_buy = root.findViewById(R.id.btn_buy_init);
+        final Button btn_sell = root.findViewById(R.id.btn_sell_init);
 
-        Handler handler =new Handler();
+        Handler handler = new Handler();
         final Runnable r = new Runnable() {
             public void run() {
 
-                handler.postDelayed(this, 100);
+                handler.postDelayed(this, 1000);
                 load();
 
-                if(!cost_str.equals(prev_cost_str)) {
+                if (!cost_str.equals(prev_cost_str)) {
                     prev_cost_str = cost_str;
                     cost_lf = strTolf(cost_str);
-                } else cost_lf *= (1 + rand.nextGaussian()/200000);
+                } else cost_lf *= (1 + rand.nextGaussian() / 200000);
 
                 cur_price.setText(lfTostr(cost_lf));
 
             }
         };
         handler.postDelayed(r, 0000);
+
+        btn_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buyInit(cost_lf);
+            }
+        });
+
+        btn_sell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                sellInit(cost_lf);
+            }
+        });
 
         chart = (LineChart) root.findViewById(R.id.LineChart);
 
@@ -183,13 +207,131 @@ public class frag3_class extends Fragment {
 
     }
 
-public double strTolf(String str) {
+    private void buyInit(double price) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.buy, null, false);
+        builder.setView(view);
+
+        final AlertDialog dialog = builder.create();
+
+        final TextView buy_cur_price = view.findViewById(R.id.buy_cur_price);
+        final EditText num_buy = view.findViewById(R.id.num_buy);
+        final Button btn_buy = view.findViewById(R.id.btn_buy);
+        final Button btn_cancel_buy = view.findViewById(R.id.btn_cancel_buy);
+
+        buy_cur_price.setText(lfTostr(price));
+
+        btn_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                String num_str = num_buy.getText().toString();
+
+                try {
+                    int num = Integer.parseInt(num_str);
+                    if(balance > num*price*(1+fees)) {
+                        balance -= num*price*(1+fees);
+                        num_BTC += num;
+                        txt_balance.setText(lfTostr(balance));
+                        txt_num_BTC.setText(numToString(num_BTC).concat(" BTC"));
+
+                        Toast toast = Toast.makeText(getContext(), "매수 성공", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                        toast.show();
+
+                        dialog.dismiss();
+                    }
+                    else {
+                        Toast toast = Toast.makeText(getContext(), "매수 실패(잔고 부족)", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                        toast.show();
+                    }
+                } catch(NumberFormatException e) {
+                    Toast toast = Toast.makeText(getContext(), "매수 실패(올바른 숫자를 입력하세요.)", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                    toast.show();
+                }
+            }
+        });
+
+        // 취소 버튼 클릭
+        btn_cancel_buy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    private void sellInit(double price) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View view = LayoutInflater.from(getContext()).inflate(R.layout.sell, null, false);
+        builder.setView(view);
+
+        final AlertDialog dialog = builder.create();
+
+        final TextView sell_cur_price = view.findViewById(R.id.sell_cur_price);
+        final EditText num_sell = view.findViewById(R.id.num_sell);
+        final Button btn_sell = view.findViewById(R.id.btn_sell);
+        final Button btn_cancel_sell = view.findViewById(R.id.btn_cancel_sell);
+
+        sell_cur_price.setText(lfTostr(price));
+
+        btn_sell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                String num_str = num_sell.getText().toString();
+
+                try {
+                    int num = Integer.parseInt(num_str);
+                    if(num_BTC >= num) {
+                        balance += num*price*(1-fees);
+                        num_BTC -= num;
+                        txt_balance.setText(lfTostr(balance));
+                        txt_num_BTC.setText(numToString(num_BTC).concat(" BTC"));
+
+                        Toast toast = Toast.makeText(getContext(), "매도 성공", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                        toast.show();
+
+                        dialog.dismiss();
+                    }
+                    else {
+                        Toast toast = Toast.makeText(getContext(), "매도 실패(잔고 부족)", Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                        toast.show();
+                    }
+                } catch(NumberFormatException e) {
+                    Toast toast = Toast.makeText(getContext(), "매도 실패(올바른 숫자를 입력하세요.)", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.TOP| Gravity.CENTER_HORIZONTAL, 0, 1700);
+                    toast.show();
+                }
+            }
+        });
+
+        // 취소 버튼 클릭
+        btn_cancel_sell.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view)
+            {
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
+    }
+
+    public double strTolf(String str) {
         String ret = "";
 
-        for(int i = 0; i < str.length(); ++i) {
+        for (int i = 0; i < str.length(); ++i) {
             char ch = str.charAt(i);
-            if(ch == ',') continue;
-            if(!Character.isDigit(ch) && ch != '.') break;
+            if (ch == ',') continue;
+            if (!Character.isDigit(ch) && ch != '.') break;
 
             ret = ret.concat(Character.toString(ch));
         }
@@ -198,7 +340,22 @@ public double strTolf(String str) {
     }
 
     public String lfTostr(double lf) {
-        return Double.toString(round(lf*10000)/10000.0).concat("$");
+        String ret = Double.toString(round(lf * 10000) / 10000.0);
+        int idx = 0;
+
+        for (; idx < ret.length(); ++idx) {
+            if (ret.charAt(idx) == '.') break;
+        }
+        if (idx == ret.length()) {
+            ret = ret.concat(".");
+            for (int j = 0; j < 4; ++j)
+                ret = ret.concat("0");
+        } else {
+            for (int j = 0; j < 5 - (ret.length() - idx); ++j)
+                ret = ret.concat("0");
+        }
+
+        return ret.concat(" $");
     }
 
     public String numToString(int num) {
@@ -264,9 +421,9 @@ public double strTolf(String str) {
         }
     }
 
-   private void feedMultiple() {
+    private void feedMultiple() {
 
-        if (thread != null){
+        if (thread != null) {
             thread.interrupt();
         }
 
@@ -274,7 +431,7 @@ public double strTolf(String str) {
 
             @Override
             public void run() {
-                while (true){
+                while (true) {
 
                     try {
                         Thread.sleep(100);
@@ -308,8 +465,7 @@ public double strTolf(String str) {
         }
 
 
-
-        data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
+        data.addEntry(new Entry((float) set.getEntryCount(), (float) num), 0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
