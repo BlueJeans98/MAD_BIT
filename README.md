@@ -6,10 +6,12 @@ ___
 ##### 쉽고 편리하게 사용 할 수 있는 연락처 탭이에요.
 1. 화면을 스크롤하여 사람들의 연락처를 구경할 수 있어요.
 2. 원하는 상대방의 레이아웃을 클릭하여 전화, 문자 및 영상통화를 할 수 있어요.
+![ezgif com-gif-maker (7)](https://user-images.githubusercontent.com/90104072/148060318-d54d0041-5207-4bde-940d-404afb414c39.gif)
 3. 원하는 상대방의 레아아웃을 길게 눌러서 연락처를 수정 및 삭제를 할 수 있어요.
+![ezgif com-gif-maker (5)](https://user-images.githubusercontent.com/90104072/148060320-f6f92827-d5be-4183-9d72-b0bec6fb4ff2.gif)
 4. 이름을 검색하여 원하는 사람의 연락처를 얻을 수 있어요.
 5. + 버튼을 눌러 상대방의 연락처를 추가할 수 있어요.
-![ezgif com-gif-maker (9)](https://user-images.githubusercontent.com/90104072/148060313-5bade238-5dad-465b-8aa9-502c6abde605.gif)
+![ezgif com-gif-maker (4)](https://user-images.githubusercontent.com/90104072/148060324-76fd976a-20cc-4a02-ac1a-af28ee019bdc.gif)
 #### Tab2. 갤러리 탭
 ##### 원하는 사진을 다양한 구도로 구경할 수 있는 갤러리 탭이에요.
 1. 갤러리에서 원하는 이미지를 클릭하면 슬라이딩 뷰가 나와요.
@@ -25,6 +27,8 @@ ___
 4. 비트코인의 가격이 올랐다면 매도 버튼을 눌러서 익절!
 5. 잔고 부족 기능도 구현해놨어요.
 6. 수수료가 0.05% 있으니 함부로 거래해선 안되겠죠?
+![ezgif com-gif-maker (2)](https://user-images.githubusercontent.com/90104072/148060296-ce881458-457a-4a6e-b2f7-23c899fa38b9.gif)
+![ezgif com-gif-maker (1)](https://user-images.githubusercontent.com/90104072/148060303-00ed9cf3-2683-4256-bbc9-7964eb3b6a9d.gif)
 ### 구현
 ViewPager2를 이용하고 Fragment를 통해 각 탭을 구성하였습니다.
 #### 연락처 탭
