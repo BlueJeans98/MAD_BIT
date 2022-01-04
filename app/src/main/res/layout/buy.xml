@@ -73,20 +73,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_color_drawable"
+            android:backgroundTint="@color/softBlack"
             android:fontFamily="@font/nanumbarungothic"
             android:text="취소"
-            android:textColor="@color/hite" />
+            android:textColor="@color/hite"
+            android:layout_margin="1dp"
+            />
 
         <Button
             android:id="@+id/btn_buy"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/button_color_drawable"
+            android:backgroundTint="@color/red"
             android:fontFamily="@font/nanumbarungothic"
             android:text="매수"
-            android:textColor="@color/hite" />
+            android:textColor="@color/hite"
+            android:layout_margin="1dp"
+            />
 
     </LinearLayout>
 

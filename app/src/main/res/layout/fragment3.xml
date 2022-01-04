@@ -6,6 +6,7 @@
     android:orientation="vertical">
 
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -13,7 +14,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:fontFamily="@font/nanumbarungothicbold"
+            android:fontFamily="@font/nanumbarungothic"
             android:gravity="left"
             android:text="$ 잔고: "
             android:textSize="30sp" />
@@ -24,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:fontFamily="@font/nanumbarungothic"
+            android:fontFamily="@font/nanumbarungothicbold"
             android:gravity="right"
             android:text="0.0000 $"
             android:textSize="30sp" />
@@ -32,6 +33,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:layout_marginTop="1dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -39,7 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:fontFamily="@font/nanumbarungothicbold"
+            android:fontFamily="@font/nanumbarungothic"
             android:gravity="left"
             android:text="BTC 잔고: "
             android:textSize="30sp" />
@@ -50,7 +52,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:fontFamily="@font/nanumbarungothic"
+            android:fontFamily="@font/nanumbarungothicbold"
             android:gravity="right"
             android:text="0 BTC"
             android:textSize="30sp" />
@@ -62,6 +64,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="4"
+        android:layout_marginTop="5dp"
         tools:context="com.example.tab_layout.frag3_class">
 
         <com.github.mikephil.charting.charts.CandleStickChart
@@ -72,6 +75,7 @@
     </RelativeLayout>
 
     <LinearLayout
+        android:layout_marginTop="5dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -79,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:fontFamily="@font/nanumbarungothicbold"
+            android:fontFamily="@font/nanumbarungothic"
             android:gravity="left"
             android:text="BTC 시세: "
             android:textSize="30sp" />
@@ -90,7 +94,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="10dp"
             android:layout_weight="1"
-            android:fontFamily="@font/nanumbarungothic"
+            android:fontFamily="@font/nanumbarungothicbold"
             android:gravity="right"
             android:text="0 $"
             android:textSize="30sp" />
@@ -108,6 +112,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumbarungothic"
             android:text="매수"
+            android:backgroundTint="@color/red"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -120,6 +125,7 @@
             android:layout_height="wrap_content"
             android:fontFamily="@font/nanumbarungothic"
             android:text="매도"
+            android:backgroundTint="@color/blue"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toRightOf="@id/btn_buy_init"

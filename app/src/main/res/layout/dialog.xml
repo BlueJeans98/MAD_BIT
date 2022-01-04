@@ -34,7 +34,9 @@
             android:background="@drawable/button_color_drawable"
             android:fontFamily="@font/nanumbarungothic"
             android:text="취소"
-            android:textColor="@color/hite" />
+            android:textColor="@color/hite"
+            android:layout_margin="1dp"
+            />
 
         <Button
             android:id="@+id/btn_edit"
@@ -44,7 +46,9 @@
             android:background="@drawable/button_color_drawable"
             android:fontFamily="@font/nanumbarungothic"
             android:text="수정"
-            android:textColor="@color/hite" />
+            android:textColor="@color/hite"
+            android:layout_margin="1dp"
+            />
 
     </LinearLayout>
 

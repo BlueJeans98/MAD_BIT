@@ -173,7 +173,7 @@ public class frag3_class extends Fragment {
             }
         });
 
-        chart = (LineChart) root.findViewById(R.id.LineChart);
+        chart = (CandleStickChart) root.findViewById(R.id.LineChart);
         chart.setDrawGridBackground(true);
         chart.setBackgroundColor(Color.WHITE);
         chart.setGridBackgroundColor(Color.WHITE);
