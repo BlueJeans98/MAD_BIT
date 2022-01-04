@@ -1,9 +1,12 @@
 package com.example.tab_layout;
 
 
+import static java.lang.Math.max;
+import static java.lang.Math.min;
 import static java.lang.Math.round;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -15,13 +18,18 @@ import android.view.ViewGroup;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
+import com.github.mikephil.charting.charts.CandleStickChart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.YAxis;
+import com.github.mikephil.charting.data.CandleData;
+import com.github.mikephil.charting.data.CandleDataSet;
+import com.github.mikephil.charting.data.CandleEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.interfaces.datasets.ICandleDataSet;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
@@ -83,13 +91,14 @@ public class frag3_class extends Fragment {
     private String prev_cost_str = "";
     private double cost_lf = 46500.0;
     private double fees = 0.0005;
+    private double prev_cost_lf = 46500;
 
     long seed = System.currentTimeMillis();
     Random rand = new Random(seed);
 
     private static final String TAG = "frag3_class";
 
-    private LineChart chart;
+    private CandleStickChart chart;
     private Thread thread;
 
 
@@ -112,6 +121,19 @@ public class frag3_class extends Fragment {
         final Button btn_buy = root.findViewById(R.id.btn_buy_init);
         final Button btn_sell = root.findViewById(R.id.btn_sell_init);
 
+        chart = (CandleStickChart) root.findViewById(R.id.LineChart);
+
+        //Y축
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setEnabled(true);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setDrawGridLines(false);
+        //leftAxis.setGridColor(Color.BLACK);
+
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
+
         Handler handler = new Handler();
         final Runnable r = new Runnable() {
             public void run() {
@@ -119,12 +141,19 @@ public class frag3_class extends Fragment {
                 handler.postDelayed(this, 1000);
                 load();
 
-                if (!cost_str.equals(prev_cost_str)) {
+
+                if(!cost_str.equals(prev_cost_str)) {
+                    prev_cost_lf = cost_lf;
                     prev_cost_str = cost_str;
                     cost_lf = strTolf(cost_str);
-                } else cost_lf *= (1 + rand.nextGaussian() / 200000);
+                } else {
+                    prev_cost_lf = cost_lf;
+                    cost_lf *= (1 + rand.nextGaussian()/20000);
+                }
 
                 cur_price.setText(lfTostr(cost_lf));
+                leftAxis.setAxisMinimum((float)cost_lf - 50);
+                leftAxis.setAxisMaximum((float)cost_lf + 50);
 
             }
         };
@@ -145,18 +174,18 @@ public class frag3_class extends Fragment {
         });
 
         chart = (LineChart) root.findViewById(R.id.LineChart);
-
         chart.setDrawGridBackground(true);
-        chart.setBackgroundColor(Color.BLACK);
-        chart.setGridBackgroundColor(Color.BLACK);
+        chart.setBackgroundColor(Color.WHITE);
+        chart.setGridBackgroundColor(Color.WHITE);
 
 // description text
         chart.getDescription().setEnabled(true);
         Description des = chart.getDescription();
         des.setEnabled(true);
-        des.setText("Real-Time DATA");
+        des.setText("BitCoin Price");
         des.setTextSize(15f);
-        des.setTextColor(Color.WHITE);
+        des.setTextColor(Color.BLACK);
+
 
 
 // touch gestures (false-비활성화)
@@ -184,20 +213,8 @@ public class frag3_class extends Fragment {
         l.setEnabled(true);
         l.setFormSize(10f); // set the size of the legend forms/shapes
         l.setTextSize(12f);
+
         l.setTextColor(Color.WHITE);
-
-//Y축
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setEnabled(true);
-        leftAxis.setTextColor(getResources().getColor(R.color.colorgrid));
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGridColor(getResources().getColor(R.color.colorgrid));
-        leftAxis.setAxisMinimum(46000);
-        leftAxis.setAxisMaximum(47000);
-
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setEnabled(false);
-
 
         feedMultiple();
 // don't forget to refresh the drawing
@@ -431,11 +448,12 @@ public class frag3_class extends Fragment {
 
             @Override
             public void run() {
-                while (true) {
-
+                int count = 0;
+                while (true){
                     try {
-                        Thread.sleep(100);
-                        addEntry(cost_lf);
+                        Thread.sleep(1000);
+                        addEntry(count,prev_cost_lf,cost_lf);
+                        count++;
                     } catch (InterruptedException e) {
                         // TODO Auto-generated catch block
                         e.printStackTrace();
@@ -447,25 +465,26 @@ public class frag3_class extends Fragment {
         thread.start();
     }
 
-    private void addEntry(double num) {
+    private void addEntry(int count,double prev_num, double num) {
 
-        LineData data = chart.getData();
+        CandleData data = chart.getData();
 
         if (data == null) {
-            data = new LineData();
+            data = new CandleData();
             chart.setData(data);
         }
 
-        ILineDataSet set = data.getDataSetByIndex(0);
+        ICandleDataSet set = data.getDataSetByIndex(0);
         // set.addEntry(...); // can be called as well
 
         if (set == null) {
             set = createSet();
             data.addDataSet(set);
         }
+        float high = (float)max(prev_num,num) + 5;
+        float low = (float)min(prev_num,num) - 5;
 
-
-        data.addEntry(new Entry((float) set.getEntryCount(), (float) num), 0);
+        data.addEntry(new CandleEntry(count,high,low,(float)prev_num,(float)num),0);
         data.notifyDataChanged();
 
         // let the chart know it's data has changed
@@ -477,19 +496,26 @@ public class frag3_class extends Fragment {
 
     }
 
-    private LineDataSet createSet() {
+    private CandleDataSet createSet() {
 
-        LineDataSet set = new LineDataSet(null, "Real-time Line Data");
-        set.setLineWidth(1f);
+        CandleDataSet set = new CandleDataSet(null, "Real-time Candle Data");
+        set.setColor(Color.rgb(80, 80, 80));
+        set.setShadowColor(Color.rgb(211,211,211));
+        set.setShadowWidth(0.8f);
+        set.setDecreasingColor(Color.BLUE);
+        set.setDecreasingPaintStyle(Paint.Style.FILL);
+        set.setIncreasingColor(Color.RED);
+        set.setIncreasingPaintStyle(Paint.Style.FILL);
+        set.setNeutralColor(Color.LTGRAY);
         set.setDrawValues(false);
-        set.setValueTextColor(getResources().getColor(R.color.white));
-        set.setColor(getResources().getColor(R.color.white));
-        set.setMode(LineDataSet.Mode.LINEAR);
-        set.setDrawCircles(false);
-        set.setHighLightColor(Color.rgb(190, 190, 190));
 
         return set;
     }
 
 
+
+
+
 }
+
+
