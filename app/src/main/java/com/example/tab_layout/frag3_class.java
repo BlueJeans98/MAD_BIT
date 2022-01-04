@@ -81,8 +81,8 @@ public class frag3_class extends Fragment {
     private final int num_BTC = 0;
     private String cost_str = "";
     private String prev_cost_str = "";
-    private double cost_lf = 46000;
-    private double prev_cost_lf = 46000;
+    private double cost_lf = 46500;
+    private double prev_cost_lf = 46500;
 
     long seed = System.currentTimeMillis();
     Random rand = new Random(seed);
@@ -128,7 +128,7 @@ public class frag3_class extends Fragment {
         final Runnable r = new Runnable() {
             public void run() {
 
-                handler.postDelayed(this, 1000);
+                handler.postDelayed(this, 100);
                 load();
 
                 if(!cost_str.equals(prev_cost_str)) {
@@ -187,7 +187,10 @@ public class frag3_class extends Fragment {
         l.setEnabled(true);
         l.setFormSize(10f); // set the size of the legend forms/shapes
         l.setTextSize(12f);
-        l.setTextColor(Color.BLUE);
+
+        l.setTextColor(Color.WHITE);
+
+//Y축
 
         feedMultiple();
 // don't forget to refresh the drawing
@@ -261,6 +264,7 @@ public double strTolf(String str) {
 
     }
 
+
     private void parseBpiResponse(String body) {
         try {
             StringBuilder builder = new StringBuilder();
@@ -272,14 +276,10 @@ public double strTolf(String str) {
             builder.append(usdObject.getString("rate")).append("$");
 
             cost_str = builder.toString();
-
         } catch (Exception e) {
 
         }
     }
-
-
-    public static Handler mHandler;
 
    private void feedMultiple() {
 
