@@ -73,7 +73,7 @@ public class frag3_class extends Fragment {
     private final int num_BTC = 0;
     private String cost_str = "";
     private String prev_cost_str = "";
-    private double cost_lf = 0;
+    private double cost_lf = 46000;
 
     long seed = System.currentTimeMillis();
     Random rand = new Random(seed);
@@ -101,6 +101,19 @@ public class frag3_class extends Fragment {
         txt_balance.setText(numToString(balance).concat(" $"));
         txt_num_BTC.setText(numToString(num_BTC).concat(" BTC"));
 
+        chart = (LineChart) root.findViewById(R.id.LineChart);
+
+        //Y축
+        YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setEnabled(true);
+        leftAxis.setTextColor(Color.BLACK);
+        leftAxis.setDrawGridLines(false);
+        //leftAxis.setGridColor(Color.BLACK);
+
+
+        YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
+
 
         Handler handler =new Handler();
         final Runnable r = new Runnable() {
@@ -112,27 +125,28 @@ public class frag3_class extends Fragment {
                 if(!cost_str.equals(prev_cost_str)) {
                     prev_cost_str = cost_str;
                     cost_lf = strTolf(cost_str);
-                } else cost_lf *= (1 + rand.nextGaussian()/200000);
+                } else cost_lf *= (1 + rand.nextGaussian()/20000);
 
                 cur_price.setText(lfTostr(cost_lf));
+                leftAxis.setAxisMinimum((float)cost_lf - 50);
+                leftAxis.setAxisMaximum((float)cost_lf + 50);
 
             }
         };
         handler.postDelayed(r, 0000);
 
-        chart = (LineChart) root.findViewById(R.id.LineChart);
-
         chart.setDrawGridBackground(true);
-        chart.setBackgroundColor(Color.BLACK);
-        chart.setGridBackgroundColor(Color.BLACK);
+        chart.setBackgroundColor(Color.WHITE);
+        chart.setGridBackgroundColor(Color.WHITE);
 
 // description text
         chart.getDescription().setEnabled(true);
         Description des = chart.getDescription();
         des.setEnabled(true);
-        des.setText("Real-Time DATA");
+        des.setText("BitCoin Price");
         des.setTextSize(15f);
-        des.setTextColor(Color.WHITE);
+        des.setTextColor(Color.BLACK);
+
 
 
 // touch gestures (false-비활성화)
@@ -160,20 +174,7 @@ public class frag3_class extends Fragment {
         l.setEnabled(true);
         l.setFormSize(10f); // set the size of the legend forms/shapes
         l.setTextSize(12f);
-        l.setTextColor(Color.WHITE);
-
-//Y축
-        YAxis leftAxis = chart.getAxisLeft();
-        leftAxis.setEnabled(true);
-        leftAxis.setTextColor(getResources().getColor(R.color.colorgrid));
-        leftAxis.setDrawGridLines(true);
-        leftAxis.setGridColor(getResources().getColor(R.color.colorgrid));
-        leftAxis.setAxisMinimum(46500);
-        leftAxis.setAxisMaximum(47500);
-
-        YAxis rightAxis = chart.getAxisRight();
-        rightAxis.setEnabled(false);
-
+        l.setTextColor(Color.BLUE);
 
         feedMultiple();
 // don't forget to refresh the drawing
@@ -308,10 +309,9 @@ public double strTolf(String str) {
 
         if (set == null) {
             set = createSet();
+
             data.addDataSet(set);
         }
-
-
 
         data.addEntry(new Entry((float)set.getEntryCount(), (float)num), 0);
         data.notifyDataChanged();
@@ -330,8 +330,8 @@ public double strTolf(String str) {
         LineDataSet set = new LineDataSet(null, "Real-time Line Data");
         set.setLineWidth(1f);
         set.setDrawValues(false);
-        set.setValueTextColor(getResources().getColor(R.color.white));
-        set.setColor(getResources().getColor(R.color.white));
+        set.setValueTextColor(getResources().getColor(R.color.black));
+        set.setColor(getResources().getColor(R.color.black));
         set.setMode(LineDataSet.Mode.LINEAR);
         set.setDrawCircles(false);
         set.setHighLightColor(Color.rgb(190, 190, 190));
